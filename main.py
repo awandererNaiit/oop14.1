@@ -40,37 +40,61 @@ class Category:
 
 
 class Product:
-    def __init__(self, name, description, price, amount):
-        self.name = name
-        self.description = description
-        self.__price = price
-        self.amount = amount
+    def __init__(self, name, price, category):
+        self._name = name
+        self._price = price
+        self._category = category
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def price(self):
-        return self.__price
+        return self._price
+
+    @property
+    def category(self):
+        return self._category
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 
     @price.setter
-    def price(self, new_price):
-        if new_price <= 0:
-            print("Ошибка: Цена должна быть больше нуля.")
-        else:
-            self.__price = new_price
+    def price(self, value):
+        self._price = value
 
-    def __str__(self):
-        return f"{self.name}, {self.price} руб. Остаток: {self.amount} шт."
-
-    def __len__(self):
-        return self.amount
-
-    def add(self, quantity):
-        self.amount += quantity
-        print(f"Количество продукта '{self.name}' увеличено на {quantity}. Текущий остаток: {self.amount} шт.")
-
-    def __add__(self, other):
-        total_value = (self.price * self.amount) + (other.price * other.amount)
-        return total_value
+    @category.setter
+    def category(self, value):
+        self._category = value
 
     @staticmethod
-    def create_product(name, description, price, amount):
-        return Product(name, description, price, amount)
+    def check_type(obj1, obj2):
+        if type(obj1) != type(obj2):
+            raise TypeError("Нельзя добавлять разные продукты")
+
+    def __add__(self, other):
+        self.check_type(self, other)
+        return self.price + other.price
+
+    @property
+    def total_price(self):
+        return self.price
+
+
+class Smartphone(Product):
+    def __init__(self, name, price, category, brand, model, storage, color):
+        super().__init__(name, price, category)
+        self._brand = brand
+        self._model = model
+        self._storage = storage
+        self._color = color
+
+
+class LawnGrass(Product):
+    def __init__(self, name, price, category, origin, duration, color):
+        super().__init__(name, price, category)
+        self._origin = origin
+        self._duration = duration
+        self._color = color
